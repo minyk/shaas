@@ -8,11 +8,13 @@ API to inspect and execute scripts in a server's environment via HTTP and WebSoc
 
 ## Running
 
-Because this application gives clients full access to the server, it is highly recommended to run it inside of some kind of containerized environment, such as [Heroku](http://www.heroku.com) or [Docker](https://www.docker.com/). Even in a containerized environment, you may wish to set a username and password, for use via HTTP basic authentication, by setting `BASIC_AUTH=user:password` in the environment before starting.
+Because this application gives clients full access to the server, it is highly recommended to run it inside of some kind of containerized environment, such as [Heroku](http://www.heroku.com) or [Docker](https://www.docker.com/). Even in a containerized environment, you may wish to set a username and password, for use via HTTP basic authentication, by setting `SHAAS_BASIC_AUTH=user:password` in the environment before starting.
+
+Default web port is `5000`, you can change with `SHAAS_PORT` env. If you need more than one port, setting `SHAAS_ADDITIONAL_HTTP_PORTS` env variables with comma separated port numbers.
 
 ### Limiting Directory
 
-By setting `ALLOWED_PATH=directory` in the environment, only those files/directories are callable. Default is `/usr/bin`.
+By setting `SHAAS_ALLOWED_PATH=directory` in the environment, only those files/directories are callable. Default is `/usr/bin`.
 
 ### Heroku
 

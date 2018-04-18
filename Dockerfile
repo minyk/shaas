@@ -1,2 +1,9 @@
-FROM golang:1.4.2-onbuild
-EXPOSE 5000
+FROM alpine:3.6
+
+COPY shaas /
+
+ENV SHAAS_PORT 5000
+ENV SHAAS_BASIC_AUTH root:admin
+ENV SHAAS_ALLOWED_PATH /
+
+ENTRYPOINT ["/shaas"]

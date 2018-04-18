@@ -25,7 +25,7 @@ var requireBasicAuth bool
 var allowedpath string
 
 func main() {
-	basicAuth := os.Getenv("BASIC_AUTH")
+	basicAuth := os.Getenv("SHAAS_BASIC_AUTH")
 	if basicAuth != "" {
 		requireBasicAuth = true
 		bits := strings.SplitN(basicAuth, ":", 2)
@@ -35,7 +35,7 @@ func main() {
 		}
 	}
 
-	allowedpath = os.Getenv("ALLOWED_PATH")
+	allowedpath = os.Getenv("SHAAS_ALLOWED_PATH")
 	if allowedpath == "" {
 		allowedpath = "/usr/bin"
 	}
@@ -352,7 +352,7 @@ func (fww flushWriterWrapper) Write(p []byte) (n int, err error) {
 }
 
 func primaryHTTPPort() string {
-	if port := os.Getenv("PORT"); port != "" {
+	if port := os.Getenv("SHAAS_PORT"); port != "" {
 		return port
 	}
 	return "5000"
@@ -366,7 +366,7 @@ func httpPorts() []string {
 		primaryHTTPPort(): struct{}{},
 	}
 
-	if aps := os.Getenv("ADDITIONAL_HTTP_PORTS"); aps != "" {
+	if aps := os.Getenv("SHAAS_ADDITIONAL_HTTP_PORTS"); aps != "" {
 		ap := strings.Split(aps, ",")
 		for _, p := range ap {
 			ports[p] = struct{}{}
