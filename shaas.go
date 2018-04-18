@@ -15,12 +15,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"errors"
 
 	"golang.org/x/net/websocket"
 )
 
 var authUser, authPassword string
 var requireBasicAuth bool
+var allowedpath string
 
 func main() {
 	basicAuth := os.Getenv("BASIC_AUTH")
@@ -31,6 +33,11 @@ func main() {
 		if len(bits) == 2 {
 			authPassword = bits[1]
 		}
+	}
+
+	allowedpath = os.Getenv("ALLOWED_PATH")
+	if allowedpath == "" {
+		allowedpath = "/usr/bin"
 	}
 
 	http.HandleFunc("/>/exit", authorize(handleExit))
@@ -94,6 +101,11 @@ func handleAny(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if !strings.HasPrefix(req.URL.Path, allowedpath) {
+		handleError(res, req, errors.New("Not allowed path."), http.StatusBadRequest, "Not allowed path")
+		return
+	}
+
 	path, err := os.Open(req.URL.Path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -104,6 +116,7 @@ func handleAny(res http.ResponseWriter, req *http.Request) {
 		handleError(res, req, err, http.StatusBadRequest, "Error reading path")
 		return
 	}
+
 	defer path.Close()
 
 	pathInfo, err := path.Stat()

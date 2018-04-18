@@ -8,7 +8,11 @@ API to inspect and execute scripts in a server's environment via HTTP and WebSoc
 
 ## Running
 
-Because this application gives clients full access to the server, it is highly recommended to run it inside of some kind of containerized environment, such as [Heroku](http://www.heroku.com) or [Docker](https://www.docker.com/). Even in a containerized environment, you may wish to set a username and password, for use via HTTP basic authentication, by setting `BASIC_AUTH=user:password` in the environment before starting. 
+Because this application gives clients full access to the server, it is highly recommended to run it inside of some kind of containerized environment, such as [Heroku](http://www.heroku.com) or [Docker](https://www.docker.com/). Even in a containerized environment, you may wish to set a username and password, for use via HTTP basic authentication, by setting `BASIC_AUTH=user:password` in the environment before starting.
+
+### Limiting Directory
+
+By setting `ALLOWED_PATH=directory` in the environment, only those files/directories are callable. Default is `/usr/bin`.
 
 ### Heroku
 
@@ -56,9 +60,9 @@ To execute a script on the server, simply `POST` the script path as the URL path
     Content-Type: text/plain; charset=utf-8
     Transfer-Encoding: chunked
     Via: 1.1 vegur
-    
+
     24: 2 2 2 3
-    
+
 Because `/usr/bin` is on the `PATH`, this could also be run with just the command in the body:
 
     $ curl http://shaas.example.com/ -i -X POST -d 'factor 24'
@@ -69,13 +73,13 @@ Because `/usr/bin` is on the `PATH`, this could also be run with just the comman
     Content-Type: text/plain; charset=utf-8
     Transfer-Encoding: chunked
     Via: 1.1 vegur
-    
+
     24: 2 2 2 3
 
 ### CGI Environment Variables
 
 All commands and scripts are automatically run with [CGI](http://en.wikipedia.org/wiki/Common_Gateway_Interface) environment variables for access to HTTP headers, query parameters, and other metadata:
-    
+
     $ curl http://shaas.example.com/ -X POST -d 'env | sort'
     CONTENT_LENGTH=10
     CONTENT_TYPE=application/x-www-form-urlencoded
@@ -132,7 +136,7 @@ Directories are listed in JSON format for easy parsing:
     Date: Fri, 15 May 2015 16:52:29 GMT
     Content-Length: 996
     Via: 1.1 vegur
-    
+
     {
       "bin": {
         "size": 36864,
@@ -171,7 +175,7 @@ To list a directory in plain text, use POST with the `ls` command and options of
       Content-Type: text/plain; charset=utf-8
       Transfer-Encoding: chunked
       Via: 1.1 vegur
-      
+
       total 72
       drwxr-xr-x   2 root root 36864 Mar 20 09:28 bin
       drwxr-xr-x   2 root root  4096 Apr 10  2014 games
